@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, List, ListItem } from '@mui/material';
 
 function Home() {
 
@@ -22,7 +22,7 @@ function Home() {
     res = await fetch('http://localhost:8080');
     resData = await res.json();
     if(!resData) throw new Error("取得失敗");
-    data = "著者："+resData[0].auther+"名言："+resData[0].meigen;
+    data = "「著者」："+resData[0].auther+"  「名言」："+resData[0].meigen;
     return data;
     } catch(e) {
       console.log(e);
@@ -53,12 +53,20 @@ function Home() {
   <Typography variant="h4" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>
     名言Botアプリ
   </Typography>
+  <Typography variant="h5" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>
+    ※外部APIからデータを取得しています。
+  </Typography>
   <Typography variant="body1" sx={{ mb: 2 }}>
     ボットの返答: {reply}
   </Typography>
   <TextField
     value={input}
     onChange={handleInputChange}
+    onKeyDown={e => {
+    if (e.key === 'Enter') {
+      handleSend();
+    }
+  }}
     placeholder="メッセージを入力"
     variant="outlined"
     size="small"
@@ -76,14 +84,14 @@ function Home() {
   <Typography variant="h6" sx={{ mt: 4, mb: 2 }}>
     会話履歴を管理 ↓
   </Typography>
-  <div>
-    {history.map((item, idx) => (
-      <li key={idx} style={{ background: '#f0f0f0', margin: '8px 0', padding: '8px', borderRadius: '4px' }}>
-        <strong>あなた:</strong> {item.user} <br />
-        <strong>ボット:</strong> {item.bot}
-      </li>
-    ))}
-  </div>
+  <List>
+  {history.map((item, idx) => (
+    <ListItem key={idx} sx={{ background: '#f0f0f0', margin: '8px 0', padding: '8px', borderRadius: '4px', display: 'block' }}>
+      <strong>あなた:</strong> {item.user} <br />
+      <strong>ボット:</strong> {item.bot}
+    </ListItem>
+  ))}
+</List>
 </div>
   );
 }
