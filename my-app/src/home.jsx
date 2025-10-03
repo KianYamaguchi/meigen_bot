@@ -1,31 +1,28 @@
-import React, { useState } from 'react';
+import  { useState } from 'react';
 import { Button, TextField, Typography, List, ListItem } from '@mui/material';
 
 function Home() {
 
   const [input, setInput] = useState('');
   const [reply, setReply] = useState('');
-  const [history, setHistory] = useState([])
-  let res = "";
-  let resData = "";
-  let data = "";
+  const [history, setHistory] = useState([]);
 
-  
   function handleInputChange(e) {
     setInput(e.target.value)
     }
 
-
   async function meigenFetch () {
     console.log("hello");
     try{
-    res = await fetch('http://localhost:8080');
-    resData = await res.json();
+    const res = await fetch('http://localhost:8080');
+    const resData = await res.json();
     if(!resData) throw new Error("取得失敗");
-    data = "「著者」："+resData[0].auther+"  「名言」："+resData[0].meigen;
+    const data = "「著者」："+resData[0].auther+"  「名言」："+resData[0].meigen;
     return data;
+
     } catch(e) {
       console.log(e);
+      alert("データが取得できませんでした。")
     }
   }
   
@@ -37,28 +34,20 @@ function Home() {
     } else if (input === '元気？') {
       botReply = '元気です！';
     } else if (input.includes('名言')){
-      await meigenFetch();
-      botReply = data;
+      botReply = await meigenFetch();
     } else {
       botReply = 'ごめんなさい、意味が分かりません。';
     }
     setReply(botReply);
     setHistory([...history, {user: input, bot: botReply}]);
-    
     setInput('');
   }
 
   return (
     <div>
-  <Typography variant="h4" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>
-    名言Botアプリ
-  </Typography>
-  <Typography variant="h5" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>
-    ※外部APIからデータを取得しています。
-  </Typography>
-  <Typography variant="body1" sx={{ mb: 2 }}>
-    ボットの返答: {reply}
-  </Typography>
+  <Typography variant="h4" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>名言Botアプリ</Typography>
+  <Typography variant="h5" sx={{ color: 'navy', fontWeight: 'bold', mb: 2 }}>※外部APIからデータを取得しています。</Typography>
+  <Typography variant="body1" sx={{ mb: 2 }}>ボットの返答: {reply}</Typography>
   <TextField
     value={input}
     onChange={handleInputChange}
