@@ -15,6 +15,7 @@ app.add_middleware(
 @app.get("/")
 async def root():
     try:
+        print("コンニチハ")
         async with httpx.AsyncClient() as client:
             response = await client.get("https://meigen.doodlenote.net/api/json.php?c=1&e=1")
             response.raise_for_status()
